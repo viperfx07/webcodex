@@ -1,0 +1,45 @@
+{
+   "background": {
+      "scripts": [ "background.js" ]
+   },
+   "commands": {
+      "copy-title-to-clipboard": {
+         "description": "Copy title to clipboard",
+         "suggested_key": {
+            "default": "Ctrl+Shift+V",
+            "mac": "Command+Shift+V"
+         }
+      },
+      "go-to-issue": {
+         "description": "Open the issue page",
+         "suggested_key": {
+            "default": "Ctrl+Shift+F",
+            "mac": "Command+Shift+F"
+         }
+      },
+      "refresh-issue-table": {
+         "description": "Refresh issue table",
+         "suggested_key": {
+            "default": "Alt+R",
+            "mac": "Alt+R"
+         }
+      }
+   },
+   "content_scripts": [ {
+      "js": [ "jquery.min.js", "content_script.js" ],
+      "matches": [ "*://*/*" ]
+   } ],
+   "description": "This is a Jira extension that will help you a lot",
+   "icons": {
+      "128": "icon128.png",
+      "16": "icon16.png",
+      "48": "icon48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmd5BaW8SYlibQyvheIl4g+kNvRV3uA32BGk/j6lFOGIFvZmFWMBml3cWN0IXRBLAKQCkcUYSXxtTXzjd9lclqogwXGiq65JF2lTrG4KR/7nZDjgAqDzZVoJcVlievbmCHNBh54lLNO9pnPnVi7B8HQxrAgwNn5vbv+nM2yPC9XKtUYk+cnJiI/W3cPuzYfzIsP5Ha9IZHbJsv+4x1BZucfnJ5iYKJZJDNQuKsuLK8nKhfhCR56u7kZc1KaYZJ0uCjd2AXqUHzwSJLiUpOaM+eE0N9ETbKnYdqOWrm208utV3A+byqRbA9PWzkY1UZvaUO8U2m8ei7ceEqz1592bkSQIDAQAB",
+   "manifest_version": 2,
+   "name": "JiraV",
+   "options_page": "options.html",
+   "permissions": [ "activeTab", "tabs", "contextMenus", "clipboardRead", "clipboardWrite", "storage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.0"
+}
