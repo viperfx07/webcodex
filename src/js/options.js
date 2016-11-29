@@ -19,6 +19,7 @@ function save_options(opt) {
 }
 
 function restore_items(items){
+    console.log(items);
 	optionsCache = items;
 }
 

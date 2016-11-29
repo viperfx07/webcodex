@@ -29,7 +29,7 @@ gulp.task('js', function(){
 		.pipe(plugins.plumber())
 		.pipe(plugins.concat('options.js'))
 		.pipe(plugins.uglify())
-		.pipe(gulp.dest('dist/'));
+		.pipe(gulp.dest('../dist/'));
 });
 
 gulp.task('background.js', function(){
