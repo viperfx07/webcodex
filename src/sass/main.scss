@@ -1,1 +1,33 @@
-@import 'partials/materialize';
+// @import 'partials/materialize';
+*, *:before, *:after{
+	box-sizing: border-box;
+}
+
+body{
+	font-size: 16px;
+}
+
+label, input{
+	font-size: 1.5rem;
+}
+
+button, select, input[type="text"]{
+	width: 100%;
+	font-size: inherit;
+	padding: .5rem;
+	border: 0;
+
+	&:not([multiple]){
+		border-bottom: 1px solid grey;	
+	}
+}
+
+.input-group{
+	margin: 1rem 0;
+	font-size: 1.5rem;
+}
+
+.container{
+	width: 960px;
+	margin: auto;
+}

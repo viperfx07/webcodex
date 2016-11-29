@@ -9,22 +9,22 @@
  * 3. Alfred/Zeplin-like shortcut
  */
 
-function save_options() {
+var optionsCache = [];
+
+function save_options(opt) {
+    optionsCache.push(opt);
     chrome.storage.sync.set({
-        jiraUrl: $("#jiraUrl").val(),
-        projectName: $("#projectName").val()
+        options: optionsCache
     });
 }
 
 function restore_items(items){
-	$("#jiraUrl").val(items.jiraUrl);
-	$("#projectName").val(items.projectName);
+	optionsCache = items;
 }
 
 function restore_options() {
     chrome.storage.sync.get({
-        jiraUrl: "https://ljhooker.atlassian.com",
-        projectName: "WEBCMS",
+       options: optionsCache
     }, restore_items);
 }
 
@@ -32,7 +32,12 @@ $(function(){
 	//load the options when the page is loaded
 	restore_options();
 
-	$(".jira-options").keyup(function() {
-	    save_options();
+	$(".js-add").click(function() {
+	    var savedOption = {};
+        savedOption = {
+            trackerType: $('#trackerType').val(),
+            url: $('#url').val()
+        };
+        save_options(savedOption);
 	});
 });

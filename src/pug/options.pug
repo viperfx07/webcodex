@@ -4,12 +4,23 @@ html
 	link(rel="stylesheet", href="main.css")
 body
 	.container
-		.row
-			.col.s12
-				.form
-					label.form-label(for="website") Website:
-					select#website.form-select
-						each val in ['kentico', 'jira', 'bugherd', 'asana']
-							option.option.option--capitalize(value=val)=val
-					button.btn.form-btn Add
-	script(src="options.js")
+		h1 Webcoda DEV Extension
+		form.form
+			.input-group
+				label.form-label(for="trackerType") Type:
+				select#trackerType.form-select
+					each val in ['kentico', 'jira', 'bugherd', 'asana']
+						option.option.option--capitalize(value=val)=val
+			.input-group
+				label.form-label(for="url") URL:
+				input(type="text" id="url")
+			
+			button.btn.form-btn.js-add Add
+
+		h2 Sites added:
+		.input-group
+			select#chosen(multiple)
+				option.option test1
+				option.option test2
+
+			
