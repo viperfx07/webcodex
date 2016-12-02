@@ -28,7 +28,7 @@ gulp.task('js', function(){
 		])
 		.pipe(plugins.plumber())
 		.pipe(plugins.concat('options.js'))
-		.pipe(plugins.uglify())
+		// .pipe(plugins.uglify())
 		.pipe(gulp.dest('../dist/'));
 });
 

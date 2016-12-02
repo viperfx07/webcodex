@@ -4,18 +4,19 @@
 
 var options = [];
 
-chrome.storage.sync.get(['jiraUrl', 'projectName'], (items) => {
+chrome.storage.sync.get(['jiraUrl', 'projectName'], function(items){
   console.log(items);
   options['jiraUrl'] = items.jiraUrl;
   options['projectName'] = items.projectName;
 });
 
-chrome.storage.onChanged.addListener((changes, namespace) => {
+chrome.storage.onChanged.addListener(function(changes, namespace) {
   for (key in changes) {
     var storageChange = changes[key];
     options[key] = storageChange.newValue;
   }
 });
+
 
 function sendCommandToActiveTab(commandStr, callbackFunction){
   chrome.tabs.query({

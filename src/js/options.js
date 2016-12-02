@@ -9,36 +9,56 @@
  * 3. Alfred/Zeplin-like shortcut
  */
 
-var optionsCache = [];
+let optionsCache = [];
 
 function save_options(opt) {
     optionsCache.push(opt);
     chrome.storage.sync.set({
         options: optionsCache
     });
+    restore_options();
 }
 
 function restore_items(items){
-    console.log(items);
-	optionsCache = items;
+	optionsCache = $.isArray(items.options) ? items.options : [];
+    let strHtml = '';
+    for(item of optionsCache){
+       strHtml += `<option value="${item.url}">${item.url} [${item.trackerType}]</option>`;
+    }
+    $('#chosen').html(strHtml);
+}
+
+function clearAll(){
+    chrome.storage.sync.set({options:[]}, function(){
+        restore_options();    
+    });
+    
 }
 
 function restore_options() {
-    chrome.storage.sync.get({
-       options: optionsCache
-    }, restore_items);
+    chrome.storage.sync.get('options', restore_items);
 }
 
-$(function(){
-	//load the options when the page is loaded
-	restore_options();
+//load the options when the page is loaded
+restore_options();
 
-	$(".js-add").click(function() {
-	    var savedOption = {};
-        savedOption = {
-            trackerType: $('#trackerType').val(),
-            url: $('#url').val()
-        };
-        save_options(savedOption);
-	});
+$("form").submit((e) => {
+    e.preventDefault();
+    let savedOption = {};
+    savedOption = {
+        trackerType: $('#trackerType').val(),
+        url: $('#url').val()
+    };
+    console.log(savedOption);
+    save_options(savedOption);
+    return false;
 });
+
+$('.js-clear-all').click(() => {
+    clearAll();
+});
+
+$('#trackerType').change(function() {
+    $(this).closest('.input-group').attr('data-tracker-input', $(this).val());
+});
+

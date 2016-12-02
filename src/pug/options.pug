@@ -6,7 +6,7 @@ body
 	.container
 		h1 Webcoda DEV Extension
 		form.form
-			.input-group
+			.input-group(data-tracker-input="kentico")
 				label.form-label(for="trackerType") Type:
 				select#trackerType.form-select
 					each val in ['kentico', 'jira', 'bugherd', 'asana']
@@ -14,13 +14,26 @@ body
 			.input-group
 				label.form-label(for="url") URL:
 				input(type="text" id="url")
-			
-			button.btn.form-btn.js-add Add
+
+			.input-group.tracker-input.tracker-input--jira
+				label.form-label(for="jiraProject") Jira Project
+				input(type="text" id="jiraProject")
+
+			.input-group.tracker-input.tracker-input--bugherd
+				label.form-label(for="bugherdProject") Bugherd Project
+				input(type="text" id="bugherdProject")
+
+			.input-group.tracker-input.tracker-input--asana
+				label.form-label(for="asanaProject") Asana Project
+				input(type="text" id="asanaProject")
+
+			button(type="submit").btn.form-btn.js-add Add
 
 		h2 Sites added:
-		.input-group
+		button(type="button" class="js-clear-all") Clear All
+		.input-group.flex
 			select#chosen(multiple)
-				option.option test1
-				option.option test2
-
 			
+				
+	script(src="./jquery.min.js")
+	script(src="./options.js")

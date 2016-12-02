@@ -35,7 +35,6 @@
       "16": "icon16.png",
       "48": "icon48.png"
    },
-   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmd5BaW8SYlibQyvheIl4g+kNvRV3uA32BGk/j6lFOGIFvZmFWMBml3cWN0IXRBLAKQCkcUYSXxtTXzjd9lclqogwXGiq65JF2lTrG4KR/7nZDjgAqDzZVoJcVlievbmCHNBh54lLNO9pnPnVi7B8HQxrAgwNn5vbv+nM2yPC9XKtUYk+cnJiI/W3cPuzYfzIsP5Ha9IZHbJsv+4x1BZucfnJ5iYKJZJDNQuKsuLK8nKhfhCR56u7kZc1KaYZJ0uCjd2AXqUHzwSJLiUpOaM+eE0N9ETbKnYdqOWrm208utV3A+byqRbA9PWzkY1UZvaUO8U2m8ei7ceEqz1592bkSQIDAQAB",
    "manifest_version": 2,
    "name": "WebcodEx",
    "options_page": "options.html",
