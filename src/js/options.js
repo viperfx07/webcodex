@@ -58,6 +58,17 @@ $('.js-clear-all').click(() => {
     clearAll();
 });
 
+$('.js-delete').click(() => {
+    $('#chosen option').each(function(index, val){
+        console.log(index);
+        if($(this).is(':selected')){
+            optionsCache.splice(index, 1);
+        }
+    });
+
+    chrome.storage.sync.set({options: optionsCache}, restore_options);
+});
+
 $('#trackerType').change(function() {
     $(this).closest('.input-group').attr('data-tracker-input', $(this).val());
 });

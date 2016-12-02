@@ -35,6 +35,10 @@ button, select, input[type="text"]{
 	margin: auto;
 }
 
+.flex{
+	display: flex;
+}
+
 .tracker-input{
 	@each $input in ("jira", "kentico", "bugherd", "asana"){
 		[data-tracker-input="#{$input}"] ~ &:not(#{&}--#{$input}){

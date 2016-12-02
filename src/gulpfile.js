@@ -23,11 +23,9 @@ gulp.task('css', function(){
 ////////
 gulp.task('js', function(){
 	return gulp.src([
-			'./node_modules/materialize-css/js/materialize.js',
-			'./js/options.js'
+			'./js/*.js'
 		])
 		.pipe(plugins.plumber())
-		.pipe(plugins.concat('options.js'))
 		// .pipe(plugins.uglify())
 		.pipe(gulp.dest('../dist/'));
 });

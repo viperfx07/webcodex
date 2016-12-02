@@ -1,22 +1,3 @@
-// @codekit-prepend "jquery.easing.1.3.js";
-// @codekit-prepend "velocity.min.js";
-// @codekit-prepend "hammer.min.js";
-// @codekit-prepend "jquery.hammer.js";
-// @codekit-prepend "collapsible.js";
-// @codekit-prepend "dropdown.js";
-// @codekit-prepend "leanModal.js";
-// @codekit-prepend "materialbox.js";
-// @codekit-prepend "parallax.js";
-// @codekit-prepend "tabs.js";
-// @codekit-prepend "tooltip.js";
-// @codekit-prepend "waves.js";
-// @codekit-prepend "toasts.js";
-// @codekit-prepend "sideNav.js";
-// @codekit-prepend "scrollspy.js";
-// @codekit-prepend "forms.js";
-// @codekit-prepend "slider.js";
-// @codekit-prepend "date_picker/picker.js";
-// @codekit-prepend "date_picker/picker.date.js";
 /**
  * Requirements:
  * 1. Multiple options to add more URLs & configuration
@@ -75,6 +56,17 @@ $("form").submit((e) => {
 
 $('.js-clear-all').click(() => {
     clearAll();
+});
+
+$('.js-delete').click(() => {
+    $('#chosen option').each(function(index, val){
+        console.log(index);
+        if($(this).is(':selected')){
+            optionsCache.splice(index, 1);
+        }
+    });
+
+    chrome.storage.sync.set({options: optionsCache}, restore_options);
 });
 
 $('#trackerType').change(function() {

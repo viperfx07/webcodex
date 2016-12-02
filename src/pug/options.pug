@@ -13,7 +13,7 @@ body
 						option.option.option--capitalize(value=val)=val
 			.input-group
 				label.form-label(for="url") URL:
-				input(type="text" id="url")
+				input(type="text" id="url" required placeholder="http://")
 
 			.input-group.tracker-input.tracker-input--jira
 				label.form-label(for="jiraProject") Jira Project
@@ -30,7 +30,9 @@ body
 			button(type="submit").btn.form-btn.js-add Add
 
 		h2 Sites added:
-		button(type="button" class="js-clear-all") Clear All
+		.flex
+			button(type="button" class="js-delete" style="margin-right: 10px") Delete
+			button(type="button" class="js-clear-all") Clear All
 		.input-group.flex
 			select#chosen(multiple)
 			
