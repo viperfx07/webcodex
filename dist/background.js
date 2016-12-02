@@ -4,10 +4,8 @@
 
 var options = [];
 
-chrome.storage.sync.get(['jiraUrl', 'projectName'], function(items){
-  console.log(items);
-  options['jiraUrl'] = items.jiraUrl;
-  options['projectName'] = items.projectName;
+chrome.storage.sync.get('options', function(item){
+  options = item.options;
 });
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -29,7 +27,7 @@ function sendCommandToActiveTab(commandStr, callbackFunction){
 // A generic onclick callback function.
 function copyTitleToClipboard() {
   var callback = function(response) {
-      if (response && response.type == 'copy') {
+      if (response) {
         var input = document.createElement('textarea');
         document.body.appendChild(input);
         input.value = response.text;
@@ -37,6 +35,11 @@ function copyTitleToClipboard() {
         input.select();
         document.execCommand('Copy');
         input.remove();
+        chrome.notifications.create({
+          type: "basic",
+          title:"[WEBCODEX] Title Copied!", 
+          iconUrl: "icon.png",
+          message: response.text});
     }
   };
   sendCommandToActiveTab("copytitle", callback);
@@ -44,7 +47,7 @@ function copyTitleToClipboard() {
 
 function goToIssue(){
   var callback = function(response){
-    if(response && response.type == 'goto') {
+    if(response) {
       var issueNumber = response.issueNumber;
       var jiraUrl = options['jiraUrl'];
       var projectName = options['projectName'];
@@ -54,6 +57,7 @@ function goToIssue(){
       chrome.tabs.create({url: issueUrl})
     }
   };
+
   sendCommandToActiveTab("gotoissue", callback);
 }
 
@@ -67,7 +71,6 @@ chrome.commands.onCommand.addListener(function(command){
     case 'go-to-issue': goToIssue(); break;
     case 'refresh-issue-table': refreshIssueTable(); break;
   }
-  
 });
 
 // Create one test item for each context type.

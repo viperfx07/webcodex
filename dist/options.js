@@ -19,20 +19,20 @@ function save_options(opt) {
     restore_options();
 }
 
-function restore_items(items){
-	optionsCache = $.isArray(items.options) ? items.options : [];
+function restore_items(items) {
+    optionsCache = $.isArray(items.options) ? items.options : [];
     let strHtml = '';
-    for(item of optionsCache){
-       strHtml += `<option value="${item.url}">${item.url} [${item.trackerType}]</option>`;
+    for (item of optionsCache) {
+        strHtml += `<option value="${item.url}">${item.url} [${item.trackerType}]</option>`;
     }
     $('#chosen').html(strHtml);
 }
 
-function clearAll(){
-    chrome.storage.sync.set({options:[]}, function(){
-        restore_options();    
+function clearAll() {
+    chrome.storage.sync.set({ options: [] }, function() {
+        restore_options();
     });
-    
+
 }
 
 function restore_options() {
@@ -49,8 +49,29 @@ $("form").submit((e) => {
         trackerType: $('#trackerType').val(),
         url: $('#url').val()
     };
+
+    switch($('[data-tracker-input]').data('trackerInput')){
+        case 'jira':
+            savedOption.jira = {
+                project: $('#jiraProject').val()
+            }; break;
+        case 'kentico':
+            savedOption.kentico = {
+                url: $('#kenticoProject').val()
+            }; break;
+        case 'bugherd':
+            savedOption.bugherd = {
+                url: $('#bugherdProject').val()
+            }; break;
+        case 'asana':
+            savedOption.asana = {
+                url: $('#asanaProject').val()
+            }; break;
+    }
+
     console.log(savedOption);
     save_options(savedOption);
+
     return false;
 });
 
@@ -59,17 +80,15 @@ $('.js-clear-all').click(() => {
 });
 
 $('.js-delete').click(() => {
-    $('#chosen option').each(function(index, val){
-        console.log(index);
-        if($(this).is(':selected')){
+    $('#chosen option').each(function(index, val) {
+        if ($(this).is(':selected')) {
             optionsCache.splice(index, 1);
         }
     });
 
-    chrome.storage.sync.set({options: optionsCache}, restore_options);
+    chrome.storage.sync.set({ options: optionsCache }, restore_options);
 });
 
 $('#trackerType').change(function() {
     $(this).closest('.input-group').attr('data-tracker-input', $(this).val());
 });
-

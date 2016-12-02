@@ -13,11 +13,11 @@ body
 						option.option.option--capitalize(value=val)=val
 			.input-group
 				label.form-label(for="url") URL:
-				input(type="text" id="url" required placeholder="http://")
+				input(type="text" id="url" required placeholder="Enter domain name (without protocol)")
 
 			.input-group.tracker-input.tracker-input--jira
 				label.form-label(for="jiraProject") Jira Project
-				input(type="text" id="jiraProject")
+				input(type="text" id="jiraProject" placeholder="e.g. WEBCMS form https://web.com/browse/WEBCMS-196")
 
 			.input-group.tracker-input.tracker-input--bugherd
 				label.form-label(for="bugherdProject") Bugherd Project
@@ -33,7 +33,7 @@ body
 		.flex
 			button(type="button" class="js-delete" style="margin-right: 10px") Delete
 			button(type="button" class="js-clear-all") Clear All
-		.input-group.flex
+		.input-group
 			select#chosen(multiple)
 			
 				

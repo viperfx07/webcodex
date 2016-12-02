@@ -3,6 +3,13 @@
       "scripts": [ "background.js" ]
    },
    "commands": {
+      "show-gotoany":{
+         "description": "Show Go to Any",
+         "suggested_key": {
+            "default": "Alt+Q",
+            "mac": "Alt+Q"
+         }
+      },
       "copy-title-to-clipboard": {
          "description": "Copy title to clipboard",
          "suggested_key": {
@@ -38,7 +45,7 @@
    "manifest_version": 2,
    "name": "WebcodEx",
    "options_page": "options.html",
-   "permissions": [ "activeTab", "tabs", "contextMenus", "clipboardRead", "clipboardWrite", "storage" ],
+   "permissions": [ "activeTab", "tabs", "contextMenus", "clipboardRead", "clipboardWrite", "storage", "notifications"],
    "update_url": "https://clients2.google.com/service/update2/crx",
    "version": "1.0"
 }
