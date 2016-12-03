@@ -23,7 +23,12 @@ function restore_items(items) {
     optionsCache = $.isArray(items.options) ? items.options : [];
     let strHtml = '';
     for (item of optionsCache) {
-        strHtml += `<option value="${item.url}">${item.url} [${item.trackerType}]</option>`;
+        if(item.trackerType === 'bugherd'){
+            strHtml += `<option value="${item.url}">${item.project} [${item.trackerType}]</option>`;
+        } else{
+            strHtml += `<option value="${item.url}">${item.url} [${item.trackerType}]</option>`;    
+        }
+        
     }
     $('#chosen').html(strHtml);
 }
@@ -52,25 +57,24 @@ $("form").submit((e) => {
 
     switch($('[data-tracker-input]').data('trackerInput')){
         case 'jira':
-            savedOption.jira = {
-                project: $('#jiraProject').val()
-            }; break;
+            savedOption.project = $('#jiraProject').val();
+            break;
         case 'kentico':
-            savedOption.kentico = {
-                url: $('#kenticoProject').val()
-            }; break;
+            savedOption.project = $('#kenticoProject').val();
+            break;
         case 'bugherd':
-            savedOption.bugherd = {
-                url: $('#bugherdProject').val()
-            }; break;
+            savedOption.project = $('#bugherdProject').val();
+            savedOption.projectNumber = $('#bugherdProjectNumber').val();
+            break;
         case 'asana':
-            savedOption.asana = {
-                url: $('#asanaProject').val()
-            }; break;
+            savedOption.project = $('#asanaProject').val();
+            break;
     }
 
-    console.log(savedOption);
     save_options(savedOption);
+
+    $('#url').focus().val('');
+    $('[type="text"]').val('');
 
     return false;
 });
@@ -90,5 +94,13 @@ $('.js-delete').click(() => {
 });
 
 $('#trackerType').change(function() {
-    $(this).closest('.input-group').attr('data-tracker-input', $(this).val());
+    let $this = $(this);
+    let $url = $('#url');
+    $this.closest('.input-group').attr('data-tracker-input',$this.val());
+    if($('option:selected', $this).val() == 'bugherd'){
+        $url.val('https://www.bugherd.com');
+        $('#bugherdProject').focus();
+    } else{
+        $url.focus().val('');
+    }
 });

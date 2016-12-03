@@ -3,13 +3,6 @@
       "scripts": [ "background.js" ]
    },
    "commands": {
-      "show-gotoany":{
-         "description": "Show Go to Any",
-         "suggested_key": {
-            "default": "Alt+Q",
-            "mac": "Alt+Q"
-         }
-      },
       "copy-title-to-clipboard": {
          "description": "Copy title to clipboard",
          "suggested_key": {
@@ -17,8 +10,8 @@
             "mac": "Command+Shift+V"
          }
       },
-      "go-to-issue": {
-         "description": "Open the issue page",
+      "go-to-any": {
+         "description": "Go to any",
          "suggested_key": {
             "default": "Ctrl+Shift+F",
             "mac": "Command+Shift+F"

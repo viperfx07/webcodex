@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
-	plugins = require('gulp-load-plugins')(),
-	browserSync = require('browser-sync').create();
+	plugins = require('gulp-load-plugins')();
 
 /////////
 // CSS //
@@ -15,7 +14,6 @@ gulp.task('css', function(){
     	]
     }).on('error', plugins.sass.logError))
     .pipe(gulp.dest('../dist/'))
-    .pipe(browserSync.stream({match: '**/*.css'}));
 });
 
 ////////
@@ -29,14 +27,6 @@ gulp.task('js', function(){
 		// .pipe(plugins.uglify())
 		.pipe(gulp.dest('../dist/'));
 });
-
-gulp.task('background.js', function(){
-
-});
-
-gulp.task('content_script.js', function(){
-
-})
 
 //////////
 // HTML //
@@ -62,18 +52,7 @@ gulp.task('watch', function(){
 	gulp.watch(['./pug/**/*.pug'], ['html']);
 });
 
-///////////////////
-// Static server //
-///////////////////
-gulp.task('browser-sync', function() {
-    browserSync.init({
-        server: {
-            baseDir: "../dist/"
-        }
-    });
-});
-
 /////////////
 // Default //
 /////////////
-gulp.task('default', ['css', 'js', 'html', 'browser-sync', 'watch']);
+gulp.task('default', ['css', 'js', 'html', 'watch']);

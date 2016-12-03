@@ -4,76 +4,146 @@
 
 var options = [];
 
-chrome.storage.sync.get('options', function(item){
-  options = item.options;
-});
-
-chrome.storage.onChanged.addListener(function(changes, namespace) {
-  for (key in changes) {
-    var storageChange = changes[key];
-    options[key] = storageChange.newValue;
-  }
-});
-
-function sendCommandToActiveTab(commandStr, callbackFunction){
-  chrome.tabs.query({
+function sendCommandToActiveTab(commandStr, callbackFunction) {
+    chrome.tabs.query({
         active: true,
         currentWindow: true
     }, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { command: commandStr} , callbackFunction);
+        chrome.tabs.sendMessage(tabs[0].id, { command: commandStr }, callbackFunction);
     });
 }
 
 // A generic onclick callback function.
 function copyTitleToClipboard() {
-  var callback = function(response) {
-      if (response) {
-        var input = document.createElement('textarea');
-        document.body.appendChild(input);
-        input.value = response.text;
-        input.focus();
-        input.select();
-        document.execCommand('Copy');
-        input.remove();
-        chrome.notifications.create({
-          type: "basic",
-          title:"[WEBCODEX] Title Copied!", 
-          iconUrl: "icon.png",
-          message: response.text});
+    var callback = function(response) {
+        if (response) {
+            var input = document.createElement('textarea');
+            document.body.appendChild(input);
+            input.value = response.text;
+            input.focus();
+            input.select();
+            document.execCommand('Copy');
+            input.remove();
+            chrome.notifications.create({
+                type: "basic",
+                title: "[WEBCODEX] Title Copied!",
+                iconUrl: "icon.png",
+                message: response.text
+            });
+        }
+    };
+    sendCommandToActiveTab("copytitle", callback);
+}
+
+function goToIssue(res) {
+    if (!res) return;
+
+    let url = '';
+    // parse the text
+    // Format: [first-letter-of-tracker][project][issue-number]
+    // Format example: jwebcms123 = Jira WEBCMS-123
+
+    let tracker = res.substring(0, 1);
+    let project = res.substring(1);
+    let projectName = (project.match(/[a-zA-Z]+/ig)[0]).trim().toLowerCase();
+    let issueNumber = (project.match(/\d+/ig)[0]).trim().toLowerCase();
+    let domainName = '';
+    let option;
+
+    switch (tracker) {
+        case 'j':
+            option = getOption('jira', projectName);
+            if(!option) return;
+            if(!option.length) return;
+            domainName = option[0].url;
+            url = `https://${domainName}/browse/${projectName}-${issueNumber}`;
+            break;
+        case 'b':
+            option = getOption('bugherd', projectName);
+            if(!option) return;
+            if(!option.length) return;
+            domainName = option[0].url;
+            let projectNumber = option[0].projectNumber;
+            url = `https://www.bugherd.com/projects/${projectNumber}/tasks/${issueNumber}`;
+            break;
+    }   
+
+
+    // var issueNumber = response.issueNumber;
+    // var jiraUrl = options['jiraUrl'];
+    // var projectName = options['projectName'];
+    // console.log(options);
+    // console.log(jiraUrl);
+    // var issueUrl = jiraUrl + "/browse/" + projectName + '-' + issueNumber;
+
+    if (typeof url !== 'undefined' && url !== '') {
+        openTab(url);
     }
-  };
-  sendCommandToActiveTab("copytitle", callback);
 }
 
-function goToIssue(){
-  var callback = function(response){
-    if(response) {
-      var issueNumber = response.issueNumber;
-      var jiraUrl = options['jiraUrl'];
-      var projectName = options['projectName'];
-      console.log(options);
-      console.log(jiraUrl);
-      var issueUrl = jiraUrl + "/browse/" + projectName + '-' + issueNumber;
-      chrome.tabs.create({url: issueUrl})
-    }
-  };
-
-  sendCommandToActiveTab("gotoissue", callback);
+function getOption(trackerType, projectName) {
+    return options.filter((item) => {
+        return item.trackerType == trackerType && item.project.toLowerCase() == projectName;
+    });
 }
 
-function refreshIssueTable(){
-  sendCommandToActiveTab('refreshissuetable', function(response){ console.log(response); });
+function openTab(url) {
+    chrome.tabs.create({ url: url });
 }
 
-chrome.commands.onCommand.addListener(function(command){
-  switch(command){
-    case 'copy-title-to-clipboard': copyTitleToClipboard(); break;
-    case 'go-to-issue': goToIssue(); break;
-    case 'refresh-issue-table': refreshIssueTable(); break;
-  }
+function refreshIssueTable() {
+    sendCommandToActiveTab('refreshissuetable');
+}
+
+/////////////////
+// Storage Get //
+/////////////////
+chrome.storage.sync.get('options', function(item) {
+    options = item.options;
 });
 
-// Create one test item for each context type.
+///////////////////////
+// Storage onChanged //
+///////////////////////
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    for (key in changes) {
+        var storageChange = changes[key];
+        options[key] = storageChange.newValue;
+    }
+});
+
+//////////////////////////////
+// Storage Message Listener //
+//////////////////////////////
+chrome.runtime.onMessage.addListener((request, sender, callback) => {
+    switch (request.type) {
+        case 'go-to-any':
+            goToIssue(request.text);
+            break;
+    }
+});
+
+//////////////////////////////
+// Storage Command Listener //
+//////////////////////////////
+chrome.commands.onCommand.addListener(function(command) {
+    switch (command) {
+        case 'copy-title-to-clipboard':
+            copyTitleToClipboard();
+            break;
+        case 'go-to-any':
+            sendCommandToActiveTab("go-to-any");
+            break;
+        case 'refresh-issue-table':
+            refreshIssueTable();
+            break;
+    }
+});
+
+/////////////////////////////////////////////////
+// Context Menu                                //
+// Create one test item for each context type. //
+/////////////////////////////////////////////////
 chrome.contextMenus.create({
     "title": "Copy title to clipboard",
     "contexts": ["page"],
