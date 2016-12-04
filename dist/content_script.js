@@ -1,7 +1,56 @@
-$('body').append('<input class="webcodex-gotoany" placeholder="" style="display:none; box-shadow: 0 1px 5px rgba(0,0,0,.5); position: fixed; z-index: 99999;top: 10%;left: 50%;width: 100%;height: 50px;color: white;background: rgba(0,0,0,0.6);margin: auto;transform: translateX(-50%);border-radius: 20px;max-width: 420px;padding: 0 20px;font-size: 16px;border: 0;outline:0" aria-hidden="hidden">');
+let options, searchList, widget, $gotoany, $widget;
+const fuzzyOpt = { pre: '<b>', post: '</b>' };
+chrome.storage.sync.get('options', (items) => {
+    options = items.options;
+    searchList = options.map((item) => item.trackerType.substring(0,1) + item.project.toLowerCase());
+    console.log(searchList);
+    let listHtml = '<ul class="webcodex-ul">' + searchList.map( (item) => '<li class="webcodex-li">' + item + '</li>').join('') + '</ul>';
 
-let $gotoany = $('.webcodex-gotoany');
-let goToAnyCallback;
+    widget = `
+        <style>
+            .webcodex-widget{
+                display:none;position: fixed;z-index: 99999;top: 10%;left: 50%;width: 100%;transform: translateX(-50%);background: rgba(0, 0, 0, 0.6);margin: auto;max-width: 420px;color: white;padding: 10px;border-radius: 20px;                
+            }
+            .webcodex-ul{
+                padding-left: 20px;
+                padding-right: 20px;
+                list-style: none;
+                margin-top: 10px;
+            }
+            .webcodex-li{
+                font-size: 16px;
+                padding: 5px;
+            }
+            
+            .webcodex b{
+                color:#fbbc05;
+            }
+
+            .webcodex-gotoany{
+                box-shadow: 0 1px 5px rgba(0,0,0,.5); 
+                width: 100%;
+                height: 50px;
+                color: inherit;
+                background: rgba(0,0,0,0.6)
+                ;border-radius: 20px;
+                padding: 0 20px;
+                font-size: 16px;
+                border: 0;
+                box-sizing:border-box;
+                outline:0;
+            }
+        </style>
+        <div class="webcodex-widget">
+            <input class="webcodex-gotoany" placeholder="" style="" aria-hidden="hidden">
+            ${listHtml}
+        </div>
+    `;
+    $('body').append(widget);
+    $widget = $('.webcodex-widget');
+    $gotoany = $('.webcodex-gotoany');
+    $ul = $('.webcodex-ul')
+});
+
 chrome.runtime.onMessage.addListener((request, sender, callback) => {
     let response = {};
     console.log(callback);
@@ -22,19 +71,37 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
         }
     } 
     else if (request.command == "go-to-any"){
+        $widget.toggle();
         $gotoany
-            .toggle()
             .focus()
-            .off('keyup')
-            .keyup(function(e){
+            .off('keyup').keyup(function(e){
                 let $this = $(this);
                 e.preventDefault();
                 if(e.which === 13){
                     response.text = $this.val();
                     chrome.runtime.sendMessage({type:'go-to-any', text: $(this).val()});
                     // hide it
-                    $(this).hide().val('');
+                    $(this).val('').parent().hide();
+                }else{
+                    let html;
+                    if($this.val().length){
+                        let results = fuzzy.filter($this.val(), searchList, fuzzyOpt);
+                        html = results.map((item) => '<li class="webcodex-li">' + item.string + '<li>').join('');
+                    } else{
+                        html = searchList.map( (item) => '<li class="webcodex-li">' + item + '</li>').join('');
+                    }
+                    $ul.html(html);
                 }
+            })
+            .off('keydown').keydown(function(e){
+                let $this = $(this);
+                if(e.which === 9){
+                    e.preventDefault();
+                    $this.val($('li:first-child', $ul).text());
+                } 
+            })
+            .off('focusout').on('focusout', function(e){
+                $(this).val('').parent().hide();
             });
     }
     else if (request.command == "refreshissuetable") { //jira only

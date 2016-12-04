@@ -26,7 +26,7 @@
       }
    },
    "content_scripts": [ {
-      "js": [ "jquery.min.js", "content_script.js" ],
+      "js": [ "jquery.min.js", "fuzzy.js", "content_script.js" ],
       "matches": [ "*://*/*" ]
    } ],
    "description": "This is a Jira extension that will help you a lot",

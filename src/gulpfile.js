@@ -8,10 +8,7 @@ gulp.task('css', function(){
 	return gulp.src('./sass/**/*.scss')
 	.pipe(plugins.plumber())
     .pipe(plugins.sass({
-    	outputStyle:'compressed',
-    	includePaths: [
-    		'./node_modules/materialize-css/sass/'
-    	]
+    	outputStyle:'compressed'
     }).on('error', plugins.sass.logError))
     .pipe(gulp.dest('../dist/'))
 });
