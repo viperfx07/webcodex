@@ -33,7 +33,7 @@ function copyTitleToClipboard() {
             });
         }
     };
-    sendCommandToActiveTab("copytitle", callback);
+    sendCommandToActiveTab("copytitle", true, callback);
 }
 
 function goToIssue(res) {
