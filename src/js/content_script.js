@@ -1,13 +1,35 @@
 // TODO
-// chrome storage sync should be done in the command
-// use promise
 // (optional) add li:after for complete word, e.g. binv = Bugherd (Inv)
 
-let options, searchList, widget, $gotoany, $widget;
+let options, searchList, widget, $gotoany, $widget, $ul;
 const fuzzyOpt = { pre: '<b>', post: '</b>' };
-chrome.storage.sync.get('options', (items) => {
-    options = items.options;
-    searchList = options.map((item) => item.trackerType.substring(0,1) + item.project.toLowerCase());
+
+const convertOptionsToSearchList = (options) => {
+    return options.map((item) => item.trackerType.substring(0,1) + item.project.toLowerCase());
+};
+
+const updateList = () => {
+    chrome.storage.sync.get('options', (items)=>{
+        options = items.options;
+        if($ul.length){
+            searchList = convertOptionsToSearchList(options);
+            let html = searchList.map((item) => '<li class="webcodex-li">' + item + '<li>').join('');
+            $ul.html(html);
+        }
+    });
+};
+
+let afterSyncGet = new Promise((resolve, reject) => {
+    chrome.storage.sync.get('options', (items)=>{
+        resolve(items.options);
+    });
+});
+
+/////////////
+// Initial //
+/////////////
+afterSyncGet.then((options) => {
+    searchList = convertOptionsToSearchList(options);
     let listHtml = '<ul class="webcodex-ul">' + searchList.map( (item) => '<li class="webcodex-li">' + item + '</li>').join('') + '</ul>';
 
     widget = `
@@ -52,13 +74,13 @@ chrome.storage.sync.get('options', (items) => {
     $('body').append(widget);
     $widget = $('.webcodex-widget');
     $gotoany = $('.webcodex-gotoany');
-    $ul = $('.webcodex-ul')
+    $ul = $('.webcodex-ul');
 });
 
 chrome.runtime.onMessage.addListener((request, sender, callback) => {
     let response = {};
-    console.log(callback);
-    if (request.command == "copytitle") {
+    let cmd = request.command;
+    if (cmd == "copytitle") {
         // JIRA
         if($('#key-val').length || $('#issuekey-val').length){
             response.text = '[' + $('#key-val, #issuekey-val').text() + '] ' + $('#summary-val').text().substring(0, 140);
@@ -68,13 +90,12 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
             response.text = '[' + $('.project-name').contents().last().text().trim() + '-' + $('.taskDetailId').text() + '] ' + $('.taskDescriptionHolder').text().substring(0, 140);
         }
         callback(response);
-    } else if (request.command == "gotoissue") {
+    } else if (cmd == "gotoissue") {
         response.issueNumber = prompt('Enter issue number:');
         if (typeof response.issueNumber !== 'undefined' && response.issueNumber.length > 0) {
             callback(response);
         }
-    } 
-    else if (request.command == "go-to-any"){
+    } else if (cmd == "go-to-any"){
         $widget.toggle();
         $gotoany
             .focus()
@@ -108,7 +129,10 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
                 $(this).val('').parent().hide();
             });
     }
-    else if (request.command == "refreshissuetable") { //jira only
+    else if (cmd == "updatelist") {
+        updateList();
+    }
+    else if (cmd == "refreshissuetable") { //jira only
         document.querySelector('.refresh-table').dispatchEvent(new Event('click'));
     }
 });

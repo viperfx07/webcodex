@@ -4,12 +4,13 @@
 
 var options = [];
 
-function sendCommandToActiveTab(commandStr, callbackFunction) {
-    chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { command: commandStr }, callbackFunction);
+function sendCommandToActiveTab(commandStr, isActiveOnly=true, callbackFunction) {
+    let opt = (isActiveOnly) ? { active:true, currentWindow: true} : {};
+    chrome.tabs.query(opt, function(tabs) {
+        tabs.forEach((tab) => {
+            chrome.tabs.sendMessage(tab.id, { command: commandStr }, callbackFunction);    
+        })
+        
     });
 }
 
@@ -106,10 +107,12 @@ chrome.storage.sync.get('options', function(item) {
 // Storage onChanged //
 ///////////////////////
 chrome.storage.onChanged.addListener(function(changes, namespace) {
+    console.log('changed');
     for (key in changes) {
         var storageChange = changes[key];
         options[key] = storageChange.newValue;
     }
+    sendCommandToActiveTab("updatelist", false);
 });
 
 //////////////////////////////
