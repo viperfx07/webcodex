@@ -1,9 +1,13 @@
+// TODO
+// chrome storage sync should be done in the command
+// use promise
+// (optional) add li:after for complete word, e.g. binv = Bugherd (Inv)
+
 let options, searchList, widget, $gotoany, $widget;
 const fuzzyOpt = { pre: '<b>', post: '</b>' };
 chrome.storage.sync.get('options', (items) => {
     options = items.options;
     searchList = options.map((item) => item.trackerType.substring(0,1) + item.project.toLowerCase());
-    console.log(searchList);
     let listHtml = '<ul class="webcodex-ul">' + searchList.map( (item) => '<li class="webcodex-li">' + item + '</li>').join('') + '</ul>';
 
     widget = `
@@ -31,8 +35,8 @@ chrome.storage.sync.get('options', (items) => {
                 width: 100%;
                 height: 50px;
                 color: inherit;
-                background: rgba(0,0,0,0.6)
-                ;border-radius: 20px;
+                background: rgba(0,0,0,0.6);
+                border-radius: 20px;
                 padding: 0 20px;
                 font-size: 16px;
                 border: 0;
