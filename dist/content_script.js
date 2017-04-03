@@ -87,7 +87,7 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
         }
         // Bugherd
         else if($('.taskDetailId').length) {
-            response.text = '[' + $('.project-name').contents().last().text().trim() + '-' + $('.taskDetailId').text() + '] ' + $('.taskDescriptionHolder').text().substring(0, 140);
+            response.text = '[BH-' + $('.taskDetailId').text() + '] ' + $('.taskDescriptionHolder').text().substring(0, 140);
         }
         callback(response);
     } else if (cmd == "gotoissue") {
