@@ -18,8 +18,17 @@
         document.body.append(timerDialog)
 
         window.addEventListener('message', ev => {
-            if (ev.data && ev.data.type == 'frame:close') {
-                timerDialog.close()
+            if (ev.data && ev.data.type) {
+                switch (ev.data.type) {
+                    case 'frame:close':
+                        timerDialog.close()
+                        break
+                    case 'frame:resize':
+                        timerDialog.querySelector('iframe').style.height = `${
+                            ev.data.value
+                        }px`
+                        break
+                }
             }
         })
 
@@ -35,7 +44,7 @@
                 .substring(0, 140)
             const url = document.location.href
 
-            timerDialog.innerHTML = `<iframe width="100%" frameborder="0" id="harvest-iframe" src="https://platform.harvestapp.com/platform/timer?app_name=Bugherd&amp;service=bugherd.com&amp;permalink=${url}&amp;external_item_id=1117565483889023&amp;external_item_name=${`[BH-${bhTaskDetailId}] - ${taskDescription}`}" style="height: 383px;"></iframe>`
+            timerDialog.innerHTML = `<iframe width="100%" frameborder="0" id="harvest-iframe" src="https://platform.harvestapp.com/platform/timer?app_name=Bugherd&amp;service=bugherd.com&amp;permalink=${url}&amp;external_item_id=1117565483889023&amp;external_item_name=${`[BH-${bhTaskDetailId}] - ${taskDescription}`}" style="height: 383px; transition: .2s;"></iframe>`
             timerDialog.showModal()
         })
     }
