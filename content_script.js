@@ -48,7 +48,10 @@
                     document.location.pathname + document.location.search
                 )
 
-            timerDialog.innerHTML = `<iframe width="100%" frameborder="0" id="harvest-iframe" src="https://platform.harvestapp.com/platform/timer?app_name=Bugherd&amp;service=bugherd.com&amp;permalink=${url}&amp;external_item_id=1117565483889023&amp;external_item_name=${`[BH-${bhTaskDetailId}] - ${taskDescription}`}" style="height: 383px; transition: .2s;"></iframe>`
+            // just make it unique, so it won't have impression of incorrect tracked time
+            const external_item_id = Math.round(new Date())
+
+            timerDialog.innerHTML = `<iframe width="100%" frameborder="0" id="harvest-iframe" src="https://platform.harvestapp.com/platform/timer?app_name=Bugherd&amp;service=bugherd.com&amp;permalink=${url}&amp;external_item_id=${external_item_id}&amp;external_item_name=${`[BH-${bhTaskDetailId}] - ${taskDescription}`}" style="height: 383px; transition: .2s;"></iframe>`
             timerDialog.showModal()
         })
     }
