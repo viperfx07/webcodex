@@ -14,7 +14,7 @@
     "content_scripts": [
         {
             "js": ["content_script.js"],
-            "matches": ["*://*/*"]
+            "matches": ["https://*.bugherd.com/*", "https://*.atlassian.net/*"]
         }
     ],
     "description": "Webcoda Developer extension to extends Bugherd and JIRA functionalities",
@@ -26,14 +26,14 @@
     "manifest_version": 2,
     "name": "WebcodEx",
     "permissions": [
-        "activeTab",
         "tabs",
         "contextMenus",
         "clipboardRead",
         "clipboardWrite",
-        "storage",
-        "notifications"
+        "notifications",
+        "https://*.bugherd.com/*",
+        "https://*.atlassian.net/*"
     ],
     "update_url": "https://clients2.google.com/service/update2/crx",
-    "version": "2.0"
+    "version": "2.0.2"
 }
