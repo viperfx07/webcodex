@@ -42,7 +42,11 @@
             const taskDescription = $taskDescriptionHolder.innerText
                 .trim()
                 .substring(0, 140)
-            const url = document.location.href
+            const url =
+                document.location.origin +
+                encodeURIComponent(
+                    document.location.pathname + document.location.search
+                )
 
             timerDialog.innerHTML = `<iframe width="100%" frameborder="0" id="harvest-iframe" src="https://platform.harvestapp.com/platform/timer?app_name=Bugherd&amp;service=bugherd.com&amp;permalink=${url}&amp;external_item_id=1117565483889023&amp;external_item_name=${`[BH-${bhTaskDetailId}] - ${taskDescription}`}" style="height: 383px; transition: .2s;"></iframe>`
             timerDialog.showModal()
