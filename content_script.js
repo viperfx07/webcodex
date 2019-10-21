@@ -67,6 +67,8 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
 
         const $bhTaskDetailId = document.querySelector('.taskDetailId')
 
+        const freshdeskTitle = document.title;
+
         // JIRA
         if ($jiraKeyVal) {
             const $summaryVal = document.querySelector('#summary-val')
@@ -82,6 +84,10 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
             response.text = `[ BH-${$bhTaskDetailId.innerText.trim()} ] ${$taskDescriptionHolder.innerText
                 .trim()
                 .substring(0, 140)}`
+        }
+        else if ((new RegExp('^\\[#[0-9]+\\]')).test(freshdeskTitle)){
+            const _freshdeskTitle = freshdeskTitle.replace('#', 'FD-').replace(': Webcoda', '').trim();
+            response.text = _freshdeskTitle.substring(0, 140)
         }
         callback(response)
     } else if (cmd == 'gotoissue') {
