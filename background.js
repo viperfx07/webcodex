@@ -5,14 +5,18 @@
 function sendCommandToActiveTab(
     commandStr,
     isActiveOnly = true,
-    callbackFunction
+    callbackFunction,
+    params
 ) {
     let opt = isActiveOnly ? { active: true, currentWindow: true } : {}
     chrome.tabs.query(opt, function(tabs) {
         tabs.forEach(tab => {
             chrome.tabs.sendMessage(
                 tab.id,
-                { command: commandStr },
+                {
+                    command: commandStr,
+                    params
+                },
                 callbackFunction
             )
         })
@@ -20,7 +24,7 @@ function sendCommandToActiveTab(
 }
 
 // A generic onclick callback function.
-function copyTitleToClipboard() {
+function copyTitleToClipboard(params) {
     var callback = function(response) {
         if (response) {
             var input = document.createElement('textarea')
@@ -38,7 +42,7 @@ function copyTitleToClipboard() {
             })
         }
     }
-    sendCommandToActiveTab('copy-title-to-clipboard', true, callback)
+    sendCommandToActiveTab('copy-title-to-clipboard', true, callback, params)
 }
 
 //////////////////////////////
@@ -58,6 +62,6 @@ chrome.commands.onCommand.addListener(function(command) {
 /////////////////////////////////////////////////
 chrome.contextMenus.create({
     title: 'Copy title to clipboard',
-    contexts: ['page'],
+    contexts: ['page', 'link'],
     onclick: copyTitleToClipboard
 })

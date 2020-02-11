@@ -14,7 +14,12 @@
     "content_scripts": [
         {
             "js": ["content_script.js"],
-            "matches": ["https://*.bugherd.com/*", "https://*.atlassian.net/*", "https://*.freshdesk.com/*"]
+            "matches": [
+                "https://*.bugherd.com/*",
+                "https://*.atlassian.net/*",
+                "https://*.freshdesk.com/*",
+                "https://*.visualstudio.com/*"
+            ]
         }
     ],
     "description": "Webcoda Developer extension to extends Bugherd and JIRA functionalities",
@@ -32,8 +37,9 @@
         "clipboardWrite",
         "notifications",
         "https://*.bugherd.com/*",
-        "https://*.atlassian.net/*"
+        "https://*.atlassian.net/*",
+        "https://*.visualstudio.com/*"
     ],
     "update_url": "https://clients2.google.com/service/update2/crx",
-    "version": "2.0.3"
+    "version": "2.0.4"
 }
