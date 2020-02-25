@@ -31,11 +31,11 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
         // Bugherd
         else if ($bhTaskDetailId) {
             const $taskDescriptionHolder = document.querySelector(
-                '#detailBar textarea'
+                '#task_details_container > div > div:nth-child(2) > div > div > div > span'
             )
             response.text = `[BH-${$bhTaskDetailId.innerText
                 .replace('Task #', '')
-                .trim()}] ${$taskDescriptionHolder.value
+                .trim()}] ${$taskDescriptionHolder.innerHTML
                 .trim()
                 .substring(0, 140)}`
         }

@@ -31,7 +31,7 @@
     "manifest_version": 2,
     "name": "WebcodEx",
     "permissions": [
-        "tabs",
+        "activeTab",
         "contextMenus",
         "clipboardRead",
         "clipboardWrite",
@@ -41,5 +41,5 @@
         "https://*.visualstudio.com/*"
     ],
     "update_url": "https://clients2.google.com/service/update2/crx",
-    "version": "2.0.4"
+    "version": "2.0.5"
 }
