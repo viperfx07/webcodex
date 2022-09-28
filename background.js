@@ -57,5 +57,7 @@ chrome.contextMenus.create({
     id: 'copyTitleToClipboard',
     title: 'Copy title to clipboard',
     contexts: ['page', 'link'],
-    onclick: copyTitleToClipboard
+    // onclick: copyTitleToClipboard
 })
+
+chrome.contextMenus.onClicked.addListener(copyTitleToClipboard)
