@@ -27,13 +27,6 @@ function sendCommandToActiveTab(
 function copyTitleToClipboard(params) {
     var callback = function(response) {
         if (response) {
-            var input = document.createElement('textarea')
-            document.body.appendChild(input)
-            input.value = response.text
-            input.focus()
-            input.select()
-            document.execCommand('Copy')
-            input.remove()
             chrome.notifications.create({
                 type: 'basic',
                 title: '[WEBCODEX] Title Copied!',
@@ -61,6 +54,7 @@ chrome.commands.onCommand.addListener(function(command) {
 // Create one test item for each context type. //
 /////////////////////////////////////////////////
 chrome.contextMenus.create({
+    id: 'copyTitleToClipboard',
     title: 'Copy title to clipboard',
     contexts: ['page', 'link'],
     onclick: copyTitleToClipboard

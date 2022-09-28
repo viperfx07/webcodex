@@ -2,12 +2,11 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
     let response = {}
     const { command: cmd, params } = request
 
-    console.log(params)
-
     if (cmd == 'copy-title-to-clipboard') {
         const $jiraKeyVal =
-            document.querySelector('#key-val') ||
-            document.querySelector('#issuekey-val')
+            document.querySelector(
+                '[data-testid="issue.views.issue-base.foundation.breadcrumbs.current-issue.item"]'
+            ) || document.querySelector('#issuekey-val')
 
         const $bhTaskDetailId = document.querySelector(
             '#detailBar a[href*="/tasks/"]'
@@ -23,8 +22,10 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
 
         // JIRA
         if ($jiraKeyVal) {
-            const $summaryVal = document.querySelector('#summary-val')
-            response.text = `[ ${$jiraKeyVal.innerText.trim()} ] ${$summaryVal.innerText
+            const $summaryVal = document.querySelector(
+                '[data-testid="issue.views.issue-base.foundation.summary.heading"]'
+            )
+            response.text = `[${$jiraKeyVal.innerText.trim()}] ${$summaryVal.innerText
                 .trim()
                 .substring(0, 140)}`
         }
@@ -63,6 +64,7 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
             response.text = `[WorkItem #${id}] ${title}`
         }
         callback(response)
+        copyToTheClipboard(response.text)
     } else if (cmd == 'gotoissue') {
         response.issueNumber = prompt('Enter issue number:')
         if (
@@ -78,3 +80,15 @@ chrome.runtime.onMessage.addListener((request, sender, callback) => {
             .dispatchEvent(new Event('click'))
     }
 })
+
+async function copyToTheClipboard(textToCopy) {
+    const el = document.createElement('textarea')
+    el.value = textToCopy
+    el.setAttribute('readonly', '')
+    el.style.position = 'absolute'
+    el.style.left = '-9999px'
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+}
